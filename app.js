@@ -6,7 +6,6 @@ const { continuouslyRetryFunction, createCrashTable, createInventoryTable, toggl
 let websiteInventory = 1000
 let warehouseInventory = 100
 let customerBank = 1000
-// let crashMode = 0 // 0 = off, 1 = on
 
 const app = express()
 app.use(cors())
@@ -24,7 +23,7 @@ app.post('/data', (req, res) => {
 app.post('/confirmPayment', async (req, res) => {
   console.log('Confirming payment!')
   const LAMBDA_FUNCTION_ARN = 'arn:aws:lambda:us-east-1:000000000000:function:demo_purchase_function'
-  console.log("hallo")
+  console.log('hallo')
 
   // const purchaseResponseString = await continuouslyRetryFunction(LAMBDA_FUNCTION_ARN)
 
@@ -64,6 +63,49 @@ app.post('/toggleCrash', async (req, res) => {
   let res2 = await toggleCrashTable()
   console.log('res: ', res2)
   res.json({ crashed: res2 })
+})
+
+/* Logging utils */
+const sseClients = []
+
+// Subscribe to logs
+app.get('/logs/stream', (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream')
+  res.setHeader('Cache-Control', 'no-cache')
+  res.setHeader('Connection', 'keep-alive')
+  res.setHeader('Access-Control-Allow-Origin', '*')
+
+  res.write(`data: Connected to SSE stream\n\n`)
+
+  sseClients.push(res)
+
+  req.on('close', () => {
+    const index = sseClients.indexOf(res)
+    if (index !== -1) {
+      sseClients.splice(index, 1)
+    }
+  })
+})
+
+// Helper function for broadcasting a log to all clients
+function broadcastLog(message) {
+  console.log('Broadcasting log:', message)
+  sseClients.forEach((client) => {
+    client.write(`data: ${JSON.stringify({ message })}\n\n`)
+  })
+}
+
+// Log a message
+app.post('/logs', (req, res) => {
+  const { message } = req.body
+
+  if (!message) {
+    return res.status(400).json({ error: 'No message provided' })
+  }
+
+  broadcastLog(message)
+
+  res.status(200).json({ success: true })
 })
 
 app.listen(3000, () => console.log('Server running on http://localhost:3000'))
