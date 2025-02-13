@@ -16,6 +16,8 @@ use serde_json::json;
 const CRASH_TABLE: &str = "crash_table";
 const INVENTORY_TABLE: &str = "inventory_table";
 const BANK_TABLE: &str = "bank_table";
+const INVENTORY_TABLE_REG: &str = "inventory_table_reg";
+const BANK_TABLE_REG: &str = "bank_table_reg";
 const AWS_ENDPOINT_URL: &str = "http://localhost:4566";
 
 #[napi]
@@ -115,6 +117,110 @@ pub async fn create_bank_table() -> Result<()> {
     .map_err(|e| Error::from_reason(format!("Initializing bank inventory failed {:?}", e)))?;
 
   println!("finished creating bank inventory table!");
+  Ok(())
+}
+
+
+#[napi]
+pub async fn create_inventory_table_reg() -> Result<()> {
+  let config = aws_config::defaults(BehaviorVersion::latest())
+    .region("us-east-1")
+    .endpoint_url(AWS_ENDPOINT_URL)
+    .load()
+    .await;
+
+  let aws_client = aws_sdk_dynamodb::Client::new(&config);
+
+  let throughput = ProvisionedThroughput::builder()
+    .read_capacity_units(5)
+    .write_capacity_units(5)
+    .build()
+    .map_err(|e| Error::from_reason(format!("Throughput provisioning {:?}", e)))?;
+
+  let attribute_dfns = AttributeDefinition::builder()
+    .attribute_name("id")
+    .attribute_type("S".into())
+    .build()
+    .map_err(|e| Error::from_reason(format!("Attribute definitions {:?}", e)))?;
+
+  let key_schema = KeySchemaElement::builder()
+    .attribute_name("id")
+    .key_type("HASH".into())
+    .build()
+    .map_err(|e| Error::from_reason(format!("Key scheme {:?}", e)))?;
+
+  aws_client
+    .create_table()
+    .table_name(INVENTORY_TABLE_REG)
+    .attribute_definitions(attribute_dfns)
+    .key_schema(key_schema)
+    .provisioned_throughput(throughput)
+    .send()
+    .await
+    .map_err(|e| Error::from_reason(format!("Creating inventory table without flowstate failed {:?}", e)))?;
+
+  aws_client
+    .put_item()
+    .table_name(INVENTORY_TABLE_REG)
+    .item("id", AttributeValue::S("mode".to_string()))
+    .item("value", AttributeValue::S("100".to_string()))
+    .send()
+    .await
+    .map_err(|e| Error::from_reason(format!("Inserting initial value failed {:?}", e)))?;
+
+  println!("finished creating inventory table without flowstate!");
+  Ok(())
+}
+
+
+#[napi]
+pub async fn create_bank_table_reg() -> Result<()> {
+  let config = aws_config::defaults(BehaviorVersion::latest())
+    .region("us-east-1")
+    .endpoint_url(AWS_ENDPOINT_URL)
+    .load()
+    .await;
+
+  let aws_client = aws_sdk_dynamodb::Client::new(&config);
+
+  let throughput = ProvisionedThroughput::builder()
+    .read_capacity_units(5)
+    .write_capacity_units(5)
+    .build()
+    .map_err(|e| Error::from_reason(format!("Throughput provisioning {:?}", e)))?;
+
+  let attribute_dfns = AttributeDefinition::builder()
+    .attribute_name("id")
+    .attribute_type("S".into())
+    .build()
+    .map_err(|e| Error::from_reason(format!("Attribute definitions {:?}", e)))?;
+
+  let key_schema = KeySchemaElement::builder()
+    .attribute_name("id")
+    .key_type("HASH".into())
+    .build()
+    .map_err(|e| Error::from_reason(format!("Key scheme {:?}", e)))?;
+
+  aws_client
+    .create_table()
+    .table_name(BANK_TABLE_REG)
+    .attribute_definitions(attribute_dfns)
+    .key_schema(key_schema)
+    .provisioned_throughput(throughput)
+    .send()
+    .await
+    .map_err(|e| Error::from_reason(format!("Creating bank table without flowstate failed {:?}", e)))?;
+
+  aws_client
+    .put_item()
+    .table_name(BANK_TABLE_REG)
+    .item("id", AttributeValue::S("mode".to_string()))
+    .item("value", AttributeValue::S("1000".to_string()))
+    .send()
+    .await
+    .map_err(|e| Error::from_reason(format!("Inserting initial value failed {:?}", e)))?;
+
+  println!("finished creating bank table without flowstate!");
   Ok(())
 }
 
