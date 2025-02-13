@@ -1,6 +1,7 @@
 let websiteInventory
 let warehouseInventory
 let customerBank
+let useFlowstate
 const websiteInventoryText = document.getElementById('websiteInventory')
 const warehouseInventoryText = document.getElementById('warehouseInventory')
 const customerBankText = document.getElementById('customerBank')
@@ -9,7 +10,6 @@ const progressText = document.getElementById('progressText')
 const button = document.getElementById('mainButton')
 const crashButton = document.getElementById('crashApp')
 const url = 'http://localhost:3000'
-let useFlowstate = true;
 let confirmLoading = false
 
 async function getData() {
@@ -20,6 +20,7 @@ async function getData() {
   websiteInventory = data.result.websiteInventory
   warehouseInventory = data.result.warehouseInventory
   customerBank = data.result.customerBank
+  useFlowstate = data.result.useFlowstate
 }
 
 function updateCrashButton(state) {
@@ -43,9 +44,15 @@ function updateLoadingButton() {
   }
 }
 function updateData() {
-  websiteInventoryText.innerText = websiteInventory
   warehouseInventoryText.innerText = warehouseInventory
   customerBankText.innerText = `$${customerBank}`
+  if (useFlowstate) { 
+    document.getElementById('disableFlowstate').innerHTML = "Disable Flowstate"
+    document.getElementById('ferris-buy').src = './assets/ferris_buy.png'
+  } else {
+    document.getElementById('disableFlowstate').innerHTML = "Enable Flowstate"
+    document.getElementById('ferris-buy').src = './assets/corro_unsafe.png'
+  }
 }
 
 window.onload = async function () {
@@ -54,17 +61,17 @@ window.onload = async function () {
 }
 
 setInterval(async () => {
-  const getUpdatedLogsUrl = `${url}/getLogs`
-  const getLogsRes = await fetch(getUpdatedLogsUrl, {
-    method: 'POST',
-  })
-  const data = await getLogsRes.json()
-  const logList = (data.logs).split(",")
-  logList.forEach(log => {
-    const p = document.createElement("p");
-    p.innerHTML = log;
-    document.getElementById('log-list').appendChild(p);
-  });
+  // const getUpdatedLogsUrl = `${url}/getLogs`
+  // const getLogsRes = await fetch(getUpdatedLogsUrl, {
+  //   method: 'POST',
+  // })
+  // const data = await getLogsRes.json()
+  // const logList = (data.logs).split(",")
+  // logList.forEach(log => {
+  //   const p = document.createElement("p");
+  //   p.innerHTML = log;
+  //   document.getElementById('log-list').appendChild(p);
+  // });
 }, 1000);
 
 async function confirmPayment() {
@@ -73,10 +80,6 @@ async function confirmPayment() {
   const confirmPaymentUrl = `${url}/confirmPayment`
   const confirmPaymentRes = await fetch(confirmPaymentUrl, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({useFlowstate})
   })
   const data = await confirmPaymentRes.json()
   warehouseInventory = data.warehouseInventory
@@ -91,15 +94,26 @@ button.addEventListener('click', async () => {
 })
 
 document.getElementById('disableFlowstate').addEventListener('click', async () => {
-  useFlowstate = !useFlowstate
-  if (useFlowstate) {
-    document.getElementById('disableFlowstate').innerHTML = "Disable Flowstate"
-    document.getElementById('ferris-buy').src = './assets/ferris_buy.png'
-    alert("Enabled Flowstate!")
-  } else {
-    document.getElementById('disableFlowstate').innerHTML = "Enable Flowstate"
-    document.getElementById('ferris-buy').src = './assets/corro_unsafe.png'
-    alert("Disabled Flowstate")
+  const toggleFlowstateUrl = `${url}/toggleFlowstate`
+  try {
+    const response = await fetch(toggleFlowstateUrl, {
+      method: 'POST'
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to toggle crash state')
+    }
+
+    const data = await response.json()
+    useFlowstate = data.useFlowstate
+    if (useFlowstate) {
+      alert("Enabled Flowstate!")
+    } else {
+      alert("Disabled Flowstate")
+    }
+    updateData()
+  } catch (error) {
+    console.error('Error toggling crash state:', error)
   }
 })
 

@@ -6,6 +6,7 @@ const { continuouslyRetryFunction, createCrashTable, createInventoryTable, creat
 let websiteInventory = 1000
 let warehouseInventory = 100
 let customerBank = 1000
+let useFlowstate = true
 
 const app = express()
 app.use(cors())
@@ -16,14 +17,13 @@ app.post('/data', (req, res) => {
     websiteInventory,
     warehouseInventory,
     customerBank,
+    useFlowstate
   }
   res.json({ result })
 })
 
-
 app.post('/confirmPayment', async (req, res) => {
-  const useFlowstate = req.body.useFlowstate
-  const LAMBDA_FUNCTION_ARN = useFlowstate ? 'arn:aws:lambda:us-east-1:000000000000:function:demo_purchase_function' : 'arn:aws:lambda:us-east-1:000000000001:function:demo_purchase_function_no_flowstate'
+  const LAMBDA_FUNCTION_ARN = useFlowstate ? 'arn:aws:lambda:us-east-1:000000000000:function:demo_purchase_function' : 'arn:aws:lambda:us-east-1:000000000000:function:demo_purchase_function_no_flowstate:4'
   
   const purchaseResponseString = await continuouslyRetryFunction(LAMBDA_FUNCTION_ARN)
 
@@ -33,6 +33,8 @@ app.post('/confirmPayment', async (req, res) => {
   let purchaseResponse = JSON.parse(purchaseResponseString)
   purchaseResponse = JSON.parse(purchaseResponse)
   console.log(`Got response ${purchaseResponse}`)
+  console.log(purchaseResponse.inventory)
+  console.log(purchaseResponse.bank)
 
   res.json({
     warehouseInventory: purchaseResponse.inventory,
@@ -72,7 +74,7 @@ app.post('/createBankTableReg', async (req, res) => {
 })
 
 app.post('/createInventoryTableReg', async (req, res) => {
-  await createBankTableReg()
+  await createInventoryTableReg()
   res.json({ ok: 'ok' })
 })
 
@@ -80,6 +82,11 @@ app.post('/toggleCrash', async (req, res) => {
   let res2 = await toggleCrashTable()
   console.log('res: ', res2)
   res.json({ crashed: res2 })
+})
+
+app.post('/toggleFlowstate', (req, res) => {
+  useFlowstate = !useFlowstate
+  res.json({ useFlowstate })
 })
 
 /* Logging utils */
