@@ -310,9 +310,12 @@ if (!nativeBinding) {
   throw new Error(`Failed to load native binding`)
 }
 
-const { continuouslyRetryFunction, createInventoryTable, createCrashTable, toggleCrashTable } = nativeBinding
+const { continuouslyRetryFunction, createInventoryTable, createCrashTable, createBankTable, createInventoryTableReg, createBankTableReg, toggleCrashTable } = nativeBinding
 
 module.exports.continuouslyRetryFunction = continuouslyRetryFunction
 module.exports.createInventoryTable = createInventoryTable
+module.exports.createInventoryTableReg = createInventoryTableReg
+module.exports.createBankTableReg = createBankTableReg
+module.exports.createBankTable = createBankTable
 module.exports.createCrashTable = createCrashTable
 module.exports.toggleCrashTable = toggleCrashTable

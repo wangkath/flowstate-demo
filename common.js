@@ -104,6 +104,9 @@ document.getElementById('crashApp').addEventListener('click', async () => {
 document.getElementById('makeTables').addEventListener('click', async () => {
   const makeCrashTable = `${url}/createCrashTable`
   const makeInventoryTable = `${url}/createInventoryTable`
+  const makeBankTable = `${url}/createBankTable`
+  const makeInventoryTableReg = `${url}/createInventoryTableReg`
+  const makeBankTableReg = `${url}/createBankTableReg`
   try {
     const crashResponse = await fetch(makeCrashTable, {
       method: 'POST',
@@ -120,6 +123,30 @@ document.getElementById('makeTables').addEventListener('click', async () => {
       throw new Error('Failed to create inventory table')
     }
     console.log('Inventory table created successfully')
+
+    const bankResponse = await fetch(makeBankTable, {
+      method: 'POST',
+    })
+    if (!bankResponse.ok) {
+      throw new Error('Failed to create bank table')
+    }
+    console.log('Bank table created successfully')
+
+    const bankRegResponse = await fetch(makeBankTableReg, {
+      method: 'POST',
+    })
+    if (!bankRegResponse.ok) {
+      throw new Error('Failed to create bank table without flowstate')
+    }
+    console.log('Bank table without flowstate created successfully')
+
+    const inventoryResponseReg = await fetch(makeInventoryTableReg, {
+      method: 'POST',
+    })
+    if (!inventoryResponseReg.ok) {
+      throw new Error('Failed to create inventory table without flowstate')
+    }
+    console.log('Inventory table without flowstate created successfully')
 
     alert('Tables created successfully!')
   } catch (error) {
