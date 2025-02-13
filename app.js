@@ -22,8 +22,8 @@ app.post('/data', (req, res) => {
 
 
 app.post('/confirmPayment', async (req, res) => {
-  const LAMBDA_FUNCTION_ARN = 'arn:aws:lambda:us-east-1:000000000000:function:demo_purchase_function'
   const useFlowstate = req.body.useFlowstate
+  const LAMBDA_FUNCTION_ARN = useFlowstate ? 'arn:aws:lambda:us-east-1:000000000000:function:demo_purchase_function' : 'arn:aws:lambda:us-east-1:000000000001:function:demo_purchase_function_no_flowstate'
   
   const purchaseResponseString = await continuouslyRetryFunction(LAMBDA_FUNCTION_ARN)
 
