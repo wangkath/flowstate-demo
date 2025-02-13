@@ -162,7 +162,7 @@ pub async fn create_inventory_table_reg() -> Result<()> {
   aws_client
     .put_item()
     .table_name(INVENTORY_TABLE_REG)
-    .item("id", AttributeValue::S("mode".to_string()))
+    .item("id", AttributeValue::S("inventory".to_string()))
     .item("value", AttributeValue::S("100".to_string()))
     .send()
     .await
@@ -214,7 +214,7 @@ pub async fn create_bank_table_reg() -> Result<()> {
   aws_client
     .put_item()
     .table_name(BANK_TABLE_REG)
-    .item("id", AttributeValue::S("mode".to_string()))
+    .item("id", AttributeValue::S("bank".to_string()))
     .item("value", AttributeValue::S("1000".to_string()))
     .send()
     .await
