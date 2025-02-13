@@ -1,7 +1,15 @@
 const express = require('express')
 const cors = require('cors')
 
-const { continuouslyRetryFunction, createCrashTable, createInventoryTable, createBankTable, createInventoryTableReg, createBankTableReg, toggleCrashTable } = require('./index')
+const {
+  continuouslyRetryFunction,
+  createCrashTable,
+  createInventoryTable,
+  createBankTable,
+  createInventoryTableReg,
+  createBankTableReg,
+  toggleCrashTable,
+} = require('./index')
 
 let websiteInventory = 1000
 let warehouseInventory = 100
@@ -17,14 +25,16 @@ app.post('/data', (req, res) => {
     websiteInventory,
     warehouseInventory,
     customerBank,
-    useFlowstate
+    useFlowstate,
   }
   res.json({ result })
 })
 
 app.post('/confirmPayment', async (req, res) => {
-  const LAMBDA_FUNCTION_ARN = useFlowstate ? 'arn:aws:lambda:us-east-1:000000000000:function:demo_purchase_function' : 'arn:aws:lambda:us-east-1:000000000000:function:demo_purchase_function_no_flowstate:4'
-  
+  const LAMBDA_FUNCTION_ARN = useFlowstate
+    ? 'arn:aws:lambda:us-east-1:000000000000:function:demo_purchase_function'
+    : 'arn:aws:lambda:us-east-1:000000000000:function:demo_purchase_function_no_flowstate'
+
   const purchaseResponseString = await continuouslyRetryFunction(LAMBDA_FUNCTION_ARN)
 
   // right now the response is double serialized so we need to fix that, but for now

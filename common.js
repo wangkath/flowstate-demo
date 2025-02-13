@@ -46,11 +46,11 @@ function updateLoadingButton() {
 function updateData() {
   warehouseInventoryText.innerText = warehouseInventory
   customerBankText.innerText = `$${customerBank}`
-  if (useFlowstate) { 
-    document.getElementById('disableFlowstate').innerHTML = "Disable Flowstate"
+  if (useFlowstate) {
+    document.getElementById('disableFlowstate').innerHTML = 'Disable Flowstate'
     document.getElementById('ferris-buy').src = './assets/ferris_buy.png'
   } else {
-    document.getElementById('disableFlowstate').innerHTML = "Enable Flowstate"
+    document.getElementById('disableFlowstate').innerHTML = 'Enable Flowstate'
     document.getElementById('ferris-buy').src = './assets/corro_unsafe.png'
   }
 }
@@ -72,7 +72,7 @@ setInterval(async () => {
   //   p.innerHTML = log;
   //   document.getElementById('log-list').appendChild(p);
   // });
-}, 1000);
+}, 1000)
 
 async function confirmPayment() {
   confirmLoading = true
@@ -97,7 +97,7 @@ document.getElementById('disableFlowstate').addEventListener('click', async () =
   const toggleFlowstateUrl = `${url}/toggleFlowstate`
   try {
     const response = await fetch(toggleFlowstateUrl, {
-      method: 'POST'
+      method: 'POST',
     })
 
     if (!response.ok) {
@@ -107,9 +107,9 @@ document.getElementById('disableFlowstate').addEventListener('click', async () =
     const data = await response.json()
     useFlowstate = data.useFlowstate
     if (useFlowstate) {
-      alert("Enabled Flowstate!")
+      alert('Enabled Flowstate!')
     } else {
-      alert("Disabled Flowstate")
+      alert('Disabled Flowstate')
     }
     updateData()
   } catch (error) {
@@ -208,5 +208,5 @@ logsSource.onmessage = (event) => {
   const list = document.getElementById('log-list')
   const item = document.createElement('li')
   item.textContent = message
-  list.appendChild(item)
+  list.prepend(item)
 }
