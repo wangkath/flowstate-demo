@@ -9,7 +9,7 @@ const progressText = document.getElementById('progressText')
 const button = document.getElementById('mainButton')
 const crashButton = document.getElementById('crashApp')
 const url = 'http://localhost:3000'
-const useFlowstate = true;
+let useFlowstate = true;
 let confirmLoading = false
 
 async function getData() {
@@ -91,7 +91,16 @@ button.addEventListener('click', async () => {
 })
 
 document.getElementById('disableFlowstate').addEventListener('click', async () => {
-
+  useFlowstate = !useFlowstate
+  if (useFlowstate) {
+    document.getElementById('disableFlowstate').innerHTML = "Disable Flowstate"
+    document.getElementById('ferris-buy').src = './assets/ferris_buy.png'
+    alert("Enabled Flowstate!")
+  } else {
+    document.getElementById('disableFlowstate').innerHTML = "Enable Flowstate"
+    document.getElementById('ferris-buy').src = './assets/corro_unsafe.png'
+    alert("Disabled Flowstate")
+  }
 })
 
 document.getElementById('crashApp').addEventListener('click', async () => {
