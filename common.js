@@ -10,7 +10,7 @@ const button = document.getElementById('mainButton')
 const crashButton = document.getElementById('crashApp')
 const url = 'http://localhost:3000'
 const useFlowstate = true;
-let confirmLoading = false;
+let confirmLoading = false
 
 async function getData() {
   const res = await fetch(`${url}/data`, {
@@ -87,7 +87,7 @@ async function confirmPayment() {
 }
 
 button.addEventListener('click', async () => {
-    await confirmPayment()
+  await confirmPayment()
 })
 
 document.getElementById('disableFlowstate').addEventListener('click', async () => {
@@ -173,3 +173,17 @@ document.getElementById('makeTables').addEventListener('click', async () => {
     alert('Error occurred while creating tables')
   }
 })
+
+/* Displaying logs */
+const logsSource = new EventSource('http://localhost:3000/logs/stream')
+
+logsSource.onmessage = (event) => {
+  const data = JSON.parse(event.data)
+  const message = data.message
+
+  // Add the log message as an item to the list
+  const list = document.getElementById('log-list')
+  const item = document.createElement('li')
+  item.textContent = message
+  list.appendChild(item)
+}
