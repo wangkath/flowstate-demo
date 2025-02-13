@@ -21,11 +21,14 @@ app.post('/data', (req, res) => {
   res.json({ result })
 })
 
-app.post('/confirmPayment', async (req, res) => {
-  console.log('Confirming payment!')
-  const LAMBDA_FUNCTION_ARN = 'arn:aws:lambda:us-east-1:000000000000:function:demo_purchase_function'
-  console.log("hallo")
+app.post('/getLogs', (req, res) => {
 
+})
+
+app.post('/confirmPayment', async (req, res) => {
+  const LAMBDA_FUNCTION_ARN = 'arn:aws:lambda:us-east-1:000000000000:function:demo_purchase_function'
+  const useFlowstate = req.body.useFlowstate
+  
   // const purchaseResponseString = await continuouslyRetryFunction(LAMBDA_FUNCTION_ARN)
 
   // right now the response is double serialized so we need to fix that, but for now

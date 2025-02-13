@@ -13,7 +13,8 @@
         <img class="headerLogo" src="./assets/ferris_mascot.png" alt="Ferris the Crab" />
         <h1>Crab Shop</h1>
       </div>
-      <div style="display: flex; gap: 5px">
+      <div style="display: flex; gap: 2px">
+        <button id="disableFlowstate">Disable Flowstate</button>
         <button id="makeTables">Make Tables</button>
         <button id="crashApp">Crash Application</button>
       </div>
@@ -21,6 +22,21 @@
     <div class="container">
       <div class="logs">
         <h2>Logs:</h2>
+        <div class="log-list" id="log-list">
+          <p>[02/12/2025 18:03:51] READ Inventory → 100</p>
+          <p>[02/12/2025 18:05:10] RESTARTED</p>
+          <p>[02/12/2025 18:04:13] CRASH</p>
+          <p>[02/12/2025 18:03:51] READ Inventory → 100</p>
+          <p>[02/12/2025 18:01:44] WRITE Inventory ← 100</p>
+          <p>[02/12/2025 18:03:51] READ Inventory → 100</p>
+          <p>[02/12/2025 18:05:10] RESTARTED</p>
+          <p>[02/12/2025 18:04:13] CRASH</p>
+          <p>[02/12/2025 18:03:51] READ Inventory → 100</p>
+          <p>[02/12/2025 18:01:44] WRITE Inventory ← 100</p>
+          <p>[02/12/2025 18:03:51] READ Inventory → 100</p>
+          <p>[02/12/2025 18:05:10] RESTARTED</p>
+          <p>[02/12/2025 18:04:13] CRASH</p>
+        </div>
       </div>
       <div class="purchase">
         <h2>Purchase Ferris the Crab!</h2>

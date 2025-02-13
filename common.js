@@ -9,6 +9,7 @@ const progressText = document.getElementById('progressText')
 const button = document.getElementById('mainButton')
 const crashButton = document.getElementById('crashApp')
 const url = 'http://localhost:3000'
+const useFlowstate = true;
 let confirmLoading = false;
 
 async function getData() {
@@ -52,12 +53,30 @@ window.onload = async function () {
   updateData()
 }
 
+setInterval(async () => {
+  const getUpdatedLogsUrl = `${url}/getLogs`
+  const getLogsRes = await fetch(getUpdatedLogsUrl, {
+    method: 'POST',
+  })
+  const data = await getLogsRes.json()
+  const logList = (data.logs).split(",")
+  logList.forEach(log => {
+    const p = document.createElement("p");
+    p.innerHTML = log;
+    document.getElementById('log-list').appendChild(p);
+  });
+}, 1000);
+
 async function confirmPayment() {
   confirmLoading = true
   updateLoadingButton()
   const confirmPaymentUrl = `${url}/confirmPayment`
   const confirmPaymentRes = await fetch(confirmPaymentUrl, {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({useFlowstate})
   })
   const data = await confirmPaymentRes.json()
   warehouseInventory = data.warehouseInventory
@@ -71,9 +90,9 @@ button.addEventListener('click', async () => {
     await confirmPayment()
 })
 
-// document.getElementById('crashApp').addEventListener('click', () => {
-//   alert('Application crashed! (Simulated)')
-// })
+document.getElementById('disableFlowstate').addEventListener('click', async () => {
+
+})
 
 document.getElementById('crashApp').addEventListener('click', async () => {
   //const AWS_ENDPOINT_URL = 'http://localhost:4566' // We're using LocalStack
