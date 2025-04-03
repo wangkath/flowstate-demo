@@ -1,4 +1,4 @@
-# FULL DEMO INSTRUCTIONS
+# FULL DEMO INSTRUCTIONS (running everything)
 
 ## Setup
 
@@ -40,11 +40,13 @@ npx dynamodb-admin --dynamo-endpoint http://dynamodb.localhost.localstack.cloud:
 
 ## Demo
 
-1. First, show the example of what happens _without Flowstate_, to demonstrate the problem.
+1. Make sure to create the tables
 
-2. Then _refresh the frontend_. This will reset the displayed values.
+2. First, show the example of what happens _without Flowstate_, to demonstrate the problem.
 
-3. Then stick to the example _with Flowstate_.
+3. Then _refresh the frontend_. This will reset the displayed values.
+
+4. Then stick to the example _with Flowstate_.
 
 TODO: there isn't a good way to switch back to not using Flowstate (as far as I can tell) with the current frontend setup? Maybe we could add a button to refresh displayed values based on what's currently in the tables.
 

@@ -6,9 +6,9 @@ use aws_sdk_dynamodb::types::{
   AttributeDefinition, AttributeValue, KeySchemaElement, ProvisionedThroughput,
 };
 use aws_sdk_lambda::types::InvocationType::RequestResponse;
+use flowstate::aws_client::AWSClient;
 use flowstate::flowstate_client::FlowstateClient;
 use flowstate::linked_daal::LinkedDAAL;
-use flowstate::{aws_client::AWSClient, linked_daal};
 use napi::{Error, Result};
 use napi_derive::napi;
 use serde_json::json;
@@ -19,6 +19,9 @@ const BANK_TABLE: &str = "bank_table";
 const INVENTORY_TABLE_REG: &str = "inventory_table_reg";
 const BANK_TABLE_REG: &str = "bank_table_reg";
 const AWS_ENDPOINT_URL: &str = "http://localhost:4566";
+
+const BANK_INITIAL_AMOUNT: i32 = 1000;
+const INVENTORY_INITIAL_AMOUNT: i32 = 100;
 
 #[napi]
 pub async fn continuously_retry_function(lambda_function_arn: String) -> Result<String> {
@@ -112,7 +115,7 @@ pub async fn create_bank_table() -> Result<()> {
 
   flowstate_client.register_daal(table_name, bank_table);
   flowstate_client
-    .write(table_name, "bank_amount", "1000")
+    .write(table_name, "bank_amount", &BANK_INITIAL_AMOUNT.to_string())
     .await
     .map_err(|e| Error::from_reason(format!("Initializing bank inventory failed {:?}", e)))?;
 
@@ -167,7 +170,10 @@ pub async fn create_inventory_table_reg() -> Result<()> {
     .put_item()
     .table_name(INVENTORY_TABLE_REG)
     .item("id", AttributeValue::S("inventory".to_string()))
-    .item("value", AttributeValue::S("100".to_string()))
+    .item(
+      "value",
+      AttributeValue::S(INVENTORY_INITIAL_AMOUNT.to_string()),
+    )
     .send()
     .await
     .map_err(|e| Error::from_reason(format!("Inserting initial value failed {:?}", e)))?;
@@ -223,7 +229,7 @@ pub async fn create_bank_table_reg() -> Result<()> {
     .put_item()
     .table_name(BANK_TABLE_REG)
     .item("id", AttributeValue::S("bank".to_string()))
-    .item("value", AttributeValue::S("1000".to_string()))
+    .item("value", AttributeValue::S(BANK_INITIAL_AMOUNT.to_string()))
     .send()
     .await
     .map_err(|e| Error::from_reason(format!("Inserting initial value failed {:?}", e)))?;
