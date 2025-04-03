@@ -90,7 +90,7 @@ pub async fn create_inventory_table() -> Result<()> {
 
   flowstate_client.register_daal(table_name, inventory_table);
   flowstate_client
-    .write(table_name, "website_inventory", "1000")
+    .write(table_name, "website_inventory", "100")
     .await
     .map_err(|e| Error::from_reason(format!("Initializing website inventory failed {:?}", e)))?;
 
@@ -119,7 +119,6 @@ pub async fn create_bank_table() -> Result<()> {
   println!("finished creating bank inventory table!");
   Ok(())
 }
-
 
 #[napi]
 pub async fn create_inventory_table_reg() -> Result<()> {
@@ -157,7 +156,12 @@ pub async fn create_inventory_table_reg() -> Result<()> {
     .provisioned_throughput(throughput)
     .send()
     .await
-    .map_err(|e| Error::from_reason(format!("Creating inventory table without flowstate failed {:?}", e)))?;
+    .map_err(|e| {
+      Error::from_reason(format!(
+        "Creating inventory table without flowstate failed {:?}",
+        e
+      ))
+    })?;
 
   aws_client
     .put_item()
@@ -171,7 +175,6 @@ pub async fn create_inventory_table_reg() -> Result<()> {
   println!("finished creating inventory table without flowstate!");
   Ok(())
 }
-
 
 #[napi]
 pub async fn create_bank_table_reg() -> Result<()> {
@@ -209,7 +212,12 @@ pub async fn create_bank_table_reg() -> Result<()> {
     .provisioned_throughput(throughput)
     .send()
     .await
-    .map_err(|e| Error::from_reason(format!("Creating bank table without flowstate failed {:?}", e)))?;
+    .map_err(|e| {
+      Error::from_reason(format!(
+        "Creating bank table without flowstate failed {:?}",
+        e
+      ))
+    })?;
 
   aws_client
     .put_item()

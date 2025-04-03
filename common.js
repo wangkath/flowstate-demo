@@ -204,9 +204,17 @@ logsSource.onmessage = (event) => {
   const data = JSON.parse(event.data)
   const message = data.message
 
+  // Create timestamp
+  const timestamp = new Date().toLocaleTimeString()
+
   // Add the log message as an item to the list
   const list = document.getElementById('log-list')
   const item = document.createElement('li')
-  item.textContent = message
+  item.innerHTML = `<span class="log-timestamp">[${timestamp}]</span> ${message}`
   list.prepend(item)
+
+  // Keep only the last 100 log entries to prevent excessive memory usage
+  while (list.children.length > 100) {
+    list.removeChild(list.lastChild)
+  }
 }

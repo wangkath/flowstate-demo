@@ -11,7 +11,7 @@ const {
   toggleCrashTable,
 } = require('./index')
 
-let websiteInventory = 1000
+let websiteInventory = 100
 let warehouseInventory = 100
 let customerBank = 1000
 let useFlowstate = true
