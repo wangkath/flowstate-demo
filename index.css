@@ -10,6 +10,7 @@ body {
     flex-direction: column;
     align-items: center;
     background: rgba(0,0,0,0.05);
+    height: 100vh;
 }
 
 .header {
@@ -51,61 +52,25 @@ body {
 }
 
 .container {
+    flex: 1;
+    padding: 40px;
+    gap: 20px;
     display: flex;
-    margin: 40px 0px;
-    width: 88%;
+    flex-direction: row;
+    width: calc(100% - 80px);
 }
 
 .logs, .purchase {
     border: 1px solid #ddd;
     border-radius: 20px;
-    margin: 10px;
     padding: 20px;
-    height: 450px;
-    min-height: fit-content;
     background: rgb(252, 252, 252);
     box-shadow: 1px 2px 5px rgba(0,0,0,0.1);
-}
-
-.info {
-    margin: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-}
-
-.info-container {
-    padding: 10px 20px;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    background: rgb(252, 252, 252);
-    box-shadow: 1px 2px 5px rgba(0,0,0,0.1);
-    height: 219px;
-    min-height: fit-content;
-}
-
-.info-container h2 {
-    text-align: center;
-    margin: 10px 0px;
-}
-
-.info-container div {
-    height: 1px;
-    margin: auto;
-    padding: 0;
-    width: 95%;
-    background: rgb(153, 153, 153);
-}
-
-.info-container p {
-    text-align: center;
-    font-size: 28px;
 }
 
 .logs {
     flex: 1 1 20%;
     padding: 6px 20px;
-    height: 427px;
 }
 
 .logs h2 {
@@ -123,19 +88,20 @@ body {
 }
 
 .purchase {
-    flex: 1 1 40%;
+    flex: 1 1 30%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     text-align: center;
 }
 
 .purchase h2 {
-    font-size: 28px;
+    font-size: 32px;
 }
 
 .purchase img {
-    width: 420px;
+    width: 350px;
 }
 
 .purchase button {
@@ -150,10 +116,41 @@ body {
 }
 
 .info {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+
     flex: 1 1 20%;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 20px;
+}
+
+.info-container {
+    flex: 1;
+    padding: 10px 20px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    background: rgb(252, 252, 252);
+    box-shadow: 1px 2px 5px rgba(0,0,0,0.1);
+}
+
+.info-container h2 {
+    text-align: center;
+    margin: 10px 0px;
+}
+
+.info-container div {
+    height: 1px;
+    margin: auto;
+    padding: 0;
+    width: 95%;
+    background: rgb(153, 153, 153);
+}
+
+.info-container p {
+    text-align: center;
+    font-size: 48px;
 }
 
 .progress {
@@ -169,6 +166,7 @@ body {
     box-shadow: 1px 1px 5px rgba(0,0,0,0.2);
     background: #e4e4e4;
 }
+
 .progress-bar {
     height: 20px;
     width: 0%;
