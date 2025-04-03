@@ -46,12 +46,19 @@ function updateLoadingButton() {
 function updateData() {
   warehouseInventoryText.innerText = warehouseInventory
   customerBankText.innerText = `$${customerBank}`
+
   if (useFlowstate) {
     document.getElementById('disableFlowstate').innerHTML = 'Disable Flowstate'
-    document.getElementById('ferris-buy').src = './assets/ferris_buy.png'
+    document.getElementById('item-title').innerHTML = "Exclusive Ticket to Ferris's Concert"
+    document.getElementById('item-guarantee').innerHTML =
+      "Limited supply available. We're using Flowstate to ensure you aren't double-charged."
+    document.getElementById('item-buy').src = './assets/concert_ticket_ferris.png'
   } else {
     document.getElementById('disableFlowstate').innerHTML = 'Enable Flowstate'
-    document.getElementById('ferris-buy').src = './assets/corro_unsafe.png'
+    document.getElementById('item-title').innerHTML = "Exclusive Ticket to Corro's Concert"
+    document.getElementById('item-guarantee').innerHTML =
+      "Limited supply available. We're not using Flowstate, so no guarantees on double-charging."
+    document.getElementById('item-buy').src = './assets/concert_ticket_corro.png'
   }
 }
 

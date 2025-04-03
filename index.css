@@ -102,6 +102,17 @@ body {
 
 .purchase img {
     width: 350px;
+    height: 200px;
+}
+
+.purchase #item-price {
+    font-size: 24px;
+}
+
+.purchase #item-guarantee {
+    font-size: 24px;
+    color: #666;
+    margin-top: 50px;
 }
 
 .purchase button {
