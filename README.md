@@ -1,3 +1,55 @@
+# FULL DEMO INSTRUCTIONS
+
+## Setup
+
+First, start the backend server from `flowstate-demo`:
+
+1. `yarn build`
+
+2. `yarn start`
+
+Then `cd` into `flowstate`, and:
+
+1. Start LocalStack (in a separate terminal):
+
+```bash
+docker run --rm -it \
+  -p 4566:4566 \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -e DEBUG=1 \
+  localstack/localstack
+```
+
+2. Deploy the "without flowstate" function:
+
+```
+cargo run --bin deploy_function -- --function-name demo_purchase_function_no_flowstate --aws-endpoint http://localhost:4566 --manifest-path tests/demo_purchase_function_no_flowstate/Cargo.toml
+```
+
+3. Deploy the "with flowstate" function:
+
+```
+cargo run --bin deploy_function -- --function-name demo_purchase_function --aws-endpoint http://localhost:4566 --manifest-path tests/demo_purchase_function/Cargo.toml
+```
+
+4. View the DynamoDB tables:
+
+```
+npx dynamodb-admin --dynamo-endpoint http://dynamodb.localhost.localstack.cloud:4566
+```
+
+## Demo
+
+1. First, show the example of what happens _without Flowstate_, to demonstrate the problem.
+
+2. Then _refresh the frontend_. This will reset the displayed values.
+
+3. Then stick to the example _with Flowstate_.
+
+TODO: there isn't a good way to switch back to not using Flowstate (as far as I can tell) with the current frontend setup? Maybe we could add a button to refresh displayed values based on what's currently in the tables.
+
+---
+
 # `@napi-rs/package-template`
 
 ![https://github.com/napi-rs/package-template/actions](https://github.com/napi-rs/package-template/workflows/CI/badge.svg)
